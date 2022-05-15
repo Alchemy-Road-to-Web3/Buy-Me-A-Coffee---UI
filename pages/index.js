@@ -17,6 +17,7 @@ export default function Home() {
   const [withdrawToAddress, setWithdrawToAddress] = useState("");
   const [withdrawToAddressFieldValue, setWithdrawToAddressFieldValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [balance, setBalance] = useState(0);
 
   const onNameChange = (event) => {
     setName(event.target.value);
@@ -68,6 +69,20 @@ export default function Home() {
   const clearFields = () => {
     setName("");
     setMessage("");
+  };
+
+  const getBalance = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum, "any");
+        const balance = await provider.getBalance("0x638066b07aCf4d8eE07C671103397bEe0986FBE6");
+        setBalance(balance);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const buyCoffee = async (amount) => {
@@ -186,10 +201,16 @@ export default function Home() {
   useEffect(() => {
     let buyMeACoffee;
     isWalletConnected();
+    getBalance();
     getMemos();
     getWithdrawAddress();
 
     const { ethereum } = window;
+
+    const onNewMemo = () => {
+      getMemos();
+      getBalance();
+    };
 
     // Listen for new memo events.
     if (ethereum) {
@@ -197,12 +218,12 @@ export default function Home() {
       const signer = provider.getSigner();
       buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-      buyMeACoffee.on("NewMemo", getMemos);
+      buyMeACoffee.on("NewMemo", onNewMemo);
     }
 
     return () => {
       if (buyMeACoffee) {
-        buyMeACoffee.off("NewMemo", getMemos);
+        buyMeACoffee.off("NewMemo", onNewMemo);
       }
     };
   }, []);
@@ -237,7 +258,9 @@ export default function Home() {
           <>
             <div className="mb-10">
               {withdrawToAddress && (
-                <p className="text-center mb-2">Withraw funds to: {withdrawToAddress}</p>
+                <p className="text-center mb-2">
+                  Withraw {ethers.utils.formatEther(balance.toString())} ETH to: {withdrawToAddress}
+                </p>
               )}
               <button
                 type="button"
