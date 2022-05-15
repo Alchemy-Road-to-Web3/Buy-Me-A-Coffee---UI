@@ -233,7 +233,9 @@ export default function Home() {
         {currentAccount ? (
           <>
             <div className="mb-10">
-              <p className="text-center mb-2">Withraw funds to: {withdrawToAddress}</p>
+              {withdrawToAddress && (
+                <p className="text-center mb-2">Withraw funds to: {withdrawToAddress}</p>
+              )}
               <button
                 type="button"
                 onClick={withdrawTips}
