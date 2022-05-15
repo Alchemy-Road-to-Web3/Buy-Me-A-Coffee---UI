@@ -160,7 +160,10 @@ export default function Home() {
         await buyMeACoffee.updateWithdrawAddress(withdrawToAddressFieldValue);
         console.log("Update withdraw to address completed");
 
-        setWithdrawToAddress(withdrawToAddressFieldValue);
+        console.log("Getting withdraw to address");
+        const withdrawAddress = await buyMeACoffee.getWithdrawAddress();
+        console.log("Getting withdraw to address completed");
+        setWithdrawToAddress(withdrawAddress);
         setWithdrawToAddressFieldValue("");
       }
     } catch (error) {
@@ -191,21 +194,6 @@ export default function Home() {
     isWalletConnected();
     getMemos();
     getWithdrawAddress();
-
-    // Create an event handler function for when someone sends
-    // us a new memo.
-    const onNewMemo = (from, timestamp, name, message) => {
-      console.log("Memo received: ", from, timestamp, name, message);
-      setMemos((prevState) => [
-        ...prevState,
-        {
-          address: from,
-          timestamp: new Date(timestamp * 1000),
-          message,
-          name,
-        },
-      ]);
-    };
 
     const { ethereum } = window;
 
