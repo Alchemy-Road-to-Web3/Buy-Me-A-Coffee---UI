@@ -6,14 +6,11 @@ module.exports = {
     },
     extend: {
       colors: {
-        bg: "#F9F9F9",
-        blue: "#7398CA",
-        "blue-bg": "#EDF1F6",
-        "blue-light": "#C8DCF8",
-        "blue-lighter": "#E8EFF9",
-        "blue-lightest": "#def0ff",
+        bg: "#fdf6de",
+        blue: "#def0ff",
         orange: "#FC9422",
-        "orange-light": "#FFEFDE",
+        brown: "#aa9b8a",
+        brownDark: "#57442e",
         yellow: "#EFE256",
         "yellow-light": "#F9F7DD",
         dark: "#323531",
