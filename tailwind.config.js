@@ -12,7 +12,6 @@ module.exports = {
         brown: "#aa9b8a",
         brownDark: "#57442e",
         yellow: "#EFE256",
-        "yellow-light": "#F9F7DD",
         dark: "#323531",
         grey: "#838383",
       },

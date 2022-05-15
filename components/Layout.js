@@ -2,7 +2,7 @@ import Head from "next/head";
 
 export default function Layout({ title, keywords, description, children, className = "" }) {
   return (
-    <div className="font-poppins bg-bg min-h-screen">
+    <div className="font-poppins bg-bg min-h-screen relative">
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />

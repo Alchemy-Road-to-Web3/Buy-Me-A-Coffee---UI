@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import abi from "../utils/BuyMeACoffee.json";
 import Layout from "../components/Layout";
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Home() {
   // Contract Address & ABI
@@ -15,6 +16,7 @@ export default function Home() {
   const [memos, setMemos] = useState([]);
   const [withdrawToAddress, setWithdrawToAddress] = useState("");
   const [withdrawToAddressFieldValue, setWithdrawToAddressFieldValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onNameChange = (event) => {
     setName(event.target.value);
@@ -34,11 +36,9 @@ export default function Home() {
       const { ethereum } = window;
 
       const accounts = await ethereum.request({ method: "eth_accounts" });
-      console.log("accounts: ", accounts);
 
       if (accounts.length) {
         const account = accounts[0];
-        console.log("wallet is connected! " + account);
       } else {
         console.log("make sure MetaMask is connected");
       }
@@ -79,7 +79,7 @@ export default function Home() {
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-        console.log("buying coffee..");
+        setIsLoading(true);
         const coffeeTxn = await buyMeACoffee.buyCoffee(
           name ? name : "anon",
           message ? message : "Enjoy your coffee!",
@@ -87,14 +87,11 @@ export default function Home() {
         );
 
         await coffeeTxn.wait();
-
-        console.log("mined ", coffeeTxn.hash);
-
-        console.log("coffee purchased!");
       }
     } catch (error) {
       console.log(error);
     } finally {
+      setIsLoading(false);
       clearFields();
     }
   };
@@ -109,9 +106,8 @@ export default function Home() {
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-        console.log("fetching memos from the blockchain..");
+        setIsLoading(true);
         const memos = await buyMeACoffee.getMemos();
-        console.log("fetched!");
         const formattedMemos = memos.map((memo) => {
           const date = new Date(memo.timestamp * 1000);
           return {
@@ -125,6 +121,8 @@ export default function Home() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -137,9 +135,7 @@ export default function Home() {
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-        console.log("Getting withdraw to address");
         const withdrawAddress = await buyMeACoffee.getWithdrawAddress();
-        console.log("Getting withdraw to address completed");
         setWithdrawToAddress(withdrawAddress);
       }
     } catch (error) {
@@ -156,15 +152,15 @@ export default function Home() {
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-        console.log("Updating withdraw to address");
         await buyMeACoffee.updateWithdrawAddress(withdrawToAddressFieldValue);
-        console.log("Update withdraw to address completed");
 
         setWithdrawToAddress(withdrawToAddressFieldValue);
         setWithdrawToAddressFieldValue("");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -177,12 +173,13 @@ export default function Home() {
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-        console.log("Withdrawing tips");
+        setIsLoading(true);
         await buyMeACoffee.withdrawTips();
-        console.log("Withdraw complete");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -213,6 +210,27 @@ export default function Home() {
   return (
     <Layout className="p-3 flex flex-col">
       <main className="pt-4 mb-10">
+        {isLoading && (
+          <>
+            <div className="fixed w-screen h-screen bg-gray-500/50 left-0 top-0" />
+            <PulseLoader
+              color="#d4690b"
+              loading={true}
+              size={60}
+              css={{
+                position: "fixed",
+                zIndex: 20,
+                left: 0,
+                right: 0,
+                marginLeft: "auto",
+                marginRight: "auto",
+                width: "192px",
+                top: "50%",
+                transform: "translate(0, -100%)",
+              }}
+            />
+          </>
+        )}
         <h1 className="text-2xl text-orange font-bold text-center mb-7">Buy Tomster a Coffee!</h1>
 
         {currentAccount ? (
