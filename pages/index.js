@@ -14,6 +14,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [memos, setMemos] = useState([]);
   const [withdrawToAddress, setWithdrawToAddress] = useState("");
+  const [withdrawToAddressFieldValue, setWithdrawToAddressFieldValue] = useState("");
 
   const onNameChange = (event) => {
     setName(event.target.value);
@@ -24,7 +25,7 @@ export default function Home() {
   };
 
   const onWithdrawToAddressChange = (event) => {
-    setWithdrawToAddress(event.target.value);
+    setWithdrawToAddressFieldValue(event.target.value);
   };
 
   // Wallet connection logic
@@ -102,8 +103,9 @@ export default function Home() {
   const getMemos = async () => {
     try {
       const { ethereum } = window;
+
       if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum, "any");
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
@@ -135,12 +137,49 @@ export default function Home() {
         const signer = provider.getSigner();
         const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
 
-        const withdrawAddressTxn = await buyMeACoffee.getWithdrawAddress();
+        console.log("Getting withdraw to address");
+        const withdrawAddress = await buyMeACoffee.getWithdrawAddress();
+        console.log("Getting withdraw to address completed");
+        setWithdrawToAddress(withdrawAddress);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-        await withdrawAddressTxn.wait();
+  const updateWithdrawToAddress = async () => {
+    try {
+      const { ethereum } = window;
 
-        console.log("mined ", withdrawAddressTxn.hash);
-        console.log("withdrawAddressTxn ", withdrawAddressTxn);
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum, "any");
+        const signer = provider.getSigner();
+        const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
+
+        console.log("Updating withdraw to address");
+        await buyMeACoffee.updateWithdrawAddress(withdrawToAddressFieldValue);
+        console.log("Update withdraw to address completed");
+
+        setWithdrawToAddress(withdrawToAddressFieldValue);
+        setWithdrawToAddressFieldValue("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const withdrawTips = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum, "any");
+        const signer = provider.getSigner();
+        const buyMeACoffee = new ethers.Contract(contractAddress, contractABI, signer);
+
+        console.log("Withdrawing tips");
+        await buyMeACoffee.withdrawTips();
+        console.log("Withdraw complete");
       }
     } catch (error) {
       console.log(error);
@@ -194,10 +233,10 @@ export default function Home() {
         {currentAccount ? (
           <>
             <div className="mb-10">
-              <p className="text-center mb-2">Withraw funds to: {currentAccount}</p>
+              <p className="text-center mb-2">Withraw funds to: {withdrawToAddress}</p>
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={withdrawTips}
                 className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark"
               >
                 Withdraw funds
@@ -214,12 +253,12 @@ export default function Home() {
                   id="withdrawToAddress"
                   type="text"
                   onChange={onWithdrawToAddressChange}
-                  value={withdrawToAddress}
+                  value={withdrawToAddressFieldValue}
                 />
               </div>
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={updateWithdrawToAddress}
                 className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark"
               >
                 Update withdraw to address
