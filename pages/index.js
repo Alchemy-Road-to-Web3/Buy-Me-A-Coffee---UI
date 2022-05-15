@@ -208,7 +208,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout className="p-3 flex flex-col">
+    <Layout className="max-w-lg mx-auto p-3 flex flex-col">
       <main className="pt-4 mb-10">
         {isLoading && (
           <>
@@ -242,7 +242,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={withdrawTips}
-                className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark"
+                className="block text-white w-full bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark"
               >
                 Withdraw funds
               </button>
@@ -264,7 +264,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={updateWithdrawToAddress}
-                className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark"
+                className="block text-white w-full bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark"
               >
                 Update withdraw to address
               </button>
@@ -301,7 +301,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => buyCoffee("0.001")}
-                  className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark mt-4"
+                  className="block text-white w-full bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark mt-4"
                 >
                   Buy coffee for 0.001 ETH
                 </button>
@@ -309,7 +309,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => buyCoffee("0.003")}
-                  className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark mt-4"
+                  className="block text-white w-full bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark mt-4"
                 >
                   Buy coffee for 0.003 ETH
                 </button>
@@ -319,7 +319,7 @@ export default function Home() {
         ) : (
           <button
             onClick={connectWallet}
-            className="block text-white bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark mt-4"
+            className="block text-white w-full bg-brownDark mx-auto py-2 px-5 rounded-full text-sm transition-effect border-2 border-brownDark hover:bg-white hover:text-brownDark mt-4"
           >
             {" "}
             Connect your wallet{" "}

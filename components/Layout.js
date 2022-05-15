@@ -9,9 +9,7 @@ export default function Layout({ title, keywords, description, children, classNa
         <meta name="keywords" content={keywords} />
       </Head>
 
-      <div className={`max-w-2xl mx-auto text-dark overflow-x-hidden min-h-screen ${className}`}>
-        {children}
-      </div>
+      <div className={`text-dark overflow-x-hidden min-h-screen ${className}`}>{children}</div>
     </div>
   );
 }
