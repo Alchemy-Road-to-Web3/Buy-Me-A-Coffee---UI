@@ -160,10 +160,7 @@ export default function Home() {
         await buyMeACoffee.updateWithdrawAddress(withdrawToAddressFieldValue);
         console.log("Update withdraw to address completed");
 
-        console.log("Getting withdraw to address");
-        const withdrawAddress = await buyMeACoffee.getWithdrawAddress();
-        console.log("Getting withdraw to address completed");
-        setWithdrawToAddress(withdrawAddress);
+        setWithdrawToAddress(withdrawToAddressFieldValue);
         setWithdrawToAddressFieldValue("");
       }
     } catch (error) {
